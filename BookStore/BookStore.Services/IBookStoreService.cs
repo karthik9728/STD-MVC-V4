@@ -9,15 +9,29 @@ namespace BookStore.Services
 {
     public interface IBookStoreService
     {
+        //Book
         public List<Book> GetListOfBooks();
 
         public Book GetBookById(int bookId);
 
+        //BookStore
         public List<Store> GetListOfStore();
 
         public Store GetStoryById(int storeId);
 
+        //Book Author
+        public List<BookAuthor> GetListOfBookAuthor();
+
+        public BookAuthor GetBookAuthorById(int bookAuthorId);
+
+        //Category
+        public List<Category> GetListOfCategories();
+
+        public Category GetCategoryById(int categoryId);
+
         public List<Category> GetCategoriesByBookId(int bookId);
+
+
 
         public OrderDetail GetOrderDetails(string query);
 
@@ -28,8 +42,6 @@ namespace BookStore.Services
         public List<OrderDetail> GetListOrders(string query);
 
         public int InsertMutipleRecord(Book book,List<BookCategory> categories);
-
-
 
         public int DMLTransactions(string query);
     }

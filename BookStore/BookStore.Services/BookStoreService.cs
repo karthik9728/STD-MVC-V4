@@ -158,6 +158,168 @@ namespace BookStore.Services
         }
 
 
+        public List<BookAuthor> GetListOfBookAuthor()
+        {
+            List<BookAuthor> bookAuthors = new List<BookAuthor>();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "select * from [BookAuthor]";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        bookAuthors.Add(new BookAuthor
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Name = reader["Name"].ToString()
+                        });
+                    }
+
+                    conn.Close();
+                }
+            }
+
+            return bookAuthors;
+        }
+
+
+        public BookAuthor GetBookAuthorById(int bookAuthorId)
+        {
+
+            BookAuthor bookAuthor = new BookAuthor();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "select * from [BookAuthor] where Id=@id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@id", bookAuthorId);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        bookAuthor.Id = Convert.ToInt32(reader["Id"]);
+                        bookAuthor.Name = reader["Name"].ToString();
+
+                    }
+
+                    conn.Close();
+                }
+            }
+
+            return bookAuthor;
+        }
+
+
+
+        public List<Category> GetListOfCategories()
+        {
+            List<Category> categories = new List<Category>();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "select * from [Category]";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        categories.Add(new Category
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Name = reader["Name"].ToString()
+                        });
+                    }
+
+                    conn.Close();
+                }
+            }
+
+            return categories;
+        }
+
+        public Category GetCategoryById(int categoryId)
+        {
+            Category category = new Category();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "select * from [Category] where Id=@id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@id",categoryId);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        category.Id = Convert.ToInt32(reader["Id"]);
+                        category.Name = reader["Name"].ToString();
+
+                    }
+
+                    conn.Close();
+                }
+            }
+
+            return category;
+        }
+
+
+        public List<Category> GetCategoriesByBookId(int bookId)
+        {
+            List<Category> categories = new List<Category>();
+
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "select DISTINCT c.Id,c.Name from [Book] b inner join" 
+                            + "[BookCategory] bc on b.Id=bc.BookId inner join Category c"
+                            + $"on bc.CategoryId = c.Id where b.Id = @bookId";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@bookId", bookId);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        categories.Add(new Category
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Name = reader["Name"].ToString()
+                        });
+                    }
+
+                    conn.Close();
+                }
+            }
+
+            return categories;
+        }
+
         public int DMLTransactions(string query)
         {
             throw new NotImplementedException();
@@ -165,11 +327,6 @@ namespace BookStore.Services
 
 
         public Cart GetCartDetails(string query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Category> GetCategoriesByBookId(int bookId)
         {
             throw new NotImplementedException();
         }
@@ -197,5 +354,7 @@ namespace BookStore.Services
         {
             throw new NotImplementedException();
         }
+
+
     }
 }
