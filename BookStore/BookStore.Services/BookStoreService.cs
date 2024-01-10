@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,27 +17,6 @@ namespace BookStore.Services
         public BookStoreService(IConfiguration configuration)
         {
             ConnectionString = configuration["ConnectionStrings:DefaultConnection"];
-        }
-
-
-        public int DMLTransactions(string query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Book GetBookById(int bookId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Cart GetCartDetails(string query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Category> GetCategoriesByBookId(int bookId)
-        {
-            throw new NotImplementedException();
         }
 
         public List<Book> GetListOfBooks()
@@ -75,15 +55,132 @@ namespace BookStore.Services
             return books;
         }
 
+
+        public Book GetBookById(int bookId)
+        {
+            Book book = new Book();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = $"select * from [Book] where Id=@id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                //passing condition values as parameter
+                cmd.Parameters.AddWithValue("@id", bookId);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        book.Id = Convert.ToInt32(reader["Id"]);
+                        book.Name = reader["Name"].ToString();
+                        book.Description = reader["Description"].ToString();
+                        book.ISBNNumber = reader["ISBN"].ToString();
+                        book.Price = Convert.ToDecimal(reader["Price"]);
+                        book.BookImage = reader["PictureUri"].ToString();
+                        book.BookAuthorId = Convert.ToInt32(reader["BookAuthorId"]);
+                        book.BookStoreId = Convert.ToInt32(reader["BookStoreId"]);
+                    }
+
+                    conn.Close();
+                }
+            }
+
+            return book;
+        }
+
+
+
+        public List<Store> GetListOfStore()
+        {
+            List<Store> stores = new List<Store>();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "select * from [BookStore]";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        stores.Add(new Store
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Name = reader["Name"].ToString()
+                        });
+                    }
+
+                    conn.Close();
+                }
+            }
+
+            return stores;
+        }
+
+
+        public Store GetStoryById(int storeId)
+        {
+
+            Store store = new Store();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "select * from [BookStore] where Id=@id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@id", storeId);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        store.Id = Convert.ToInt32(reader["Id"]);
+                        store.Name = reader["Name"].ToString();
+
+                    }
+
+                    conn.Close();
+                }
+            }
+
+            return store;
+        }
+
+
+        public int DMLTransactions(string query)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Cart GetCartDetails(string query)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Category> GetCategoriesByBookId(int bookId)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
         public List<Cart> GetListOfCart(string query)
         {
             throw new NotImplementedException();
         }
 
-        public List<Store> GetListOfStore(string query)
-        {
-            throw new NotImplementedException();
-        }
 
         public List<OrderDetail> GetListOrders(string query)
         {
@@ -95,10 +192,6 @@ namespace BookStore.Services
             throw new NotImplementedException();
         }
 
-        public Store GetStoryById(string query)
-        {
-            throw new NotImplementedException();
-        }
 
         public int InsertMutipleRecord(Book book, List<BookCategory> categories)
         {

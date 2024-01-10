@@ -11,6 +11,12 @@ namespace BookStore.Services
     {
         public List<Book> GetListOfBooks();
 
+        public Book GetBookById(int bookId);
+
+        public List<Store> GetListOfStore();
+
+        public Store GetStoryById(int storeId);
+
         public List<Category> GetCategoriesByBookId(int bookId);
 
         public OrderDetail GetOrderDetails(string query);
@@ -23,11 +29,7 @@ namespace BookStore.Services
 
         public int InsertMutipleRecord(Book book,List<BookCategory> categories);
 
-        public Store GetStoryById(string query);
 
-        public List<Store> GetListOfStore(string query);
-
-        public Book GetBookById(int bookId);
 
         public int DMLTransactions(string query);
     }

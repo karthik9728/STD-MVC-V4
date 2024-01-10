@@ -18,6 +18,7 @@ namespace BookStore.Web.Controllers
 
         public IActionResult Index()
         {
+            var book = _bookService.GetBookById(1);
             var books = _bookService.GetListOfBooks();
 
             return View(books);
