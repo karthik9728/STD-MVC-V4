@@ -320,31 +320,93 @@ namespace BookStore.Services
             return categories;
         }
 
-        public int DMLTransactions(string query)
+        public List<Cart> GetCartDetailsByUserId(int userId)
         {
-            throw new NotImplementedException();
+            List<Cart> carts = new List<Cart>();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "select * from [Cart] where UserId=@userId";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        carts.Add(new Cart
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            BookId = Convert.ToInt32(reader["BookId"]),
+                            BookName = reader["Name"].ToString(),
+                            Price = Convert.ToDecimal(reader["Price"]),
+                            Quantity = Convert.ToInt32(reader["Quantity"]),
+                            TotalAmount = Convert.ToDecimal(reader["TotalAmount"]),
+                            UserId = Convert.ToInt32(reader["UserId"]),
+                        });
+                    }
+
+                    conn.Close();
+                }
+            }
+
+            return carts;
         }
 
 
-        public Cart GetCartDetails(string query)
+        //public List<Cart> GetListOfCart(string query)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+
+        public List<OrderDetail> GetListOrders()
         {
-            throw new NotImplementedException();
-        }
+            List<OrderDetail> orderDetails = new List<OrderDetail>();
 
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
 
+                string sql = "select * from [Order]";
 
-        public List<Cart> GetListOfCart(string query)
-        {
-            throw new NotImplementedException();
-        }
+                SqlCommand cmd = new SqlCommand(sql, conn);
 
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        orderDetails.Add(new OrderDetail
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            BookId = Convert.ToInt32(reader["BookId"]),
+                            BookName = reader["Name"].ToString(),
+                            Price = Convert.ToDecimal(reader["Price"]),
+                            Quantity = Convert.ToInt32(reader["Quantity"]),
+                            TotalAmount = Convert.ToDecimal(reader["TotalAmount"]),
+                            UserId = Convert.ToInt32(reader["UserId"]),
+                            OrderDate = Convert.ToDateTime(reader["OrderDate"])
+                        });
+                    }
 
-        public List<OrderDetail> GetListOrders(string query)
-        {
-            throw new NotImplementedException();
+                    conn.Close();
+                }
+            }
+
+            return orderDetails;
         }
 
         public OrderDetail GetOrderDetails(string query)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public int DMLTransactions(string query)
         {
             throw new NotImplementedException();
         }

@@ -31,15 +31,17 @@ namespace BookStore.Services
 
         public List<Category> GetCategoriesByBookId(int bookId);
 
+        //Cart
+        public List<Cart> GetCartDetailsByUserId(int userId);
 
+        //public List<Cart> GetListOfCart(string query);
+
+        //Order
+        public List<OrderDetail> GetListOrders();
 
         public OrderDetail GetOrderDetails(string query);
 
-        public Cart GetCartDetails(string query);
 
-        public List<Cart> GetListOfCart(string query);
-
-        public List<OrderDetail> GetListOrders(string query);
 
         public int InsertMutipleRecord(Book book,List<BookCategory> categories);
 
