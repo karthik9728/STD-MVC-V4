@@ -84,7 +84,7 @@ namespace BookStore.Web.Controllers
             cart.Quantity = vm.Quantity;
             var total = (cart.Quantity) * (cart.Price);
             cart.TotalAmount = total;
-            cart.UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
+            cart.UserId = (int)HttpContext.Session.GetInt32("userId");
             int result = _bookService.SaveBookInCart(cart);
             if (result > 0)
             {
