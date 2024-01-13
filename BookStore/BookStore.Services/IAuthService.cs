@@ -12,5 +12,7 @@ namespace BookStore.Services
         int AddRole(string roleName);
 
         List<Role> GetAllRoles();
+
+        int AddUser(AuthenticatedUser user);
     }
 }

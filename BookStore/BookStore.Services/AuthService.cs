@@ -38,6 +38,7 @@ namespace BookStore.Services
             }
         }
 
+
         public List<Role> GetAllRoles()
         {
             List<Role> roles = new List<Role>();
@@ -66,6 +67,33 @@ namespace BookStore.Services
             }
 
             return roles;
+        }
+
+
+        public int AddUser(AuthenticatedUser user)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "INSERT INTO [User] (UserName,Email,Password,Name,ContactNumber,Address,RoleId) VALUES (@userName,@email,@password,@name,@contactNumber,@address,@roleId)";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@userName", user.UserName);
+                    cmd.Parameters.AddWithValue("@email", user.Email);
+                    cmd.Parameters.AddWithValue("@password", user.Password);
+                    cmd.Parameters.AddWithValue("@name", user.Name);
+                    cmd.Parameters.AddWithValue("@contactNumber", user.ContactNumber);
+                    cmd.Parameters.AddWithValue("@address", user.Address);
+                    cmd.Parameters.AddWithValue("@roleId", 2);
+                    int result = cmd.ExecuteNonQuery();
+
+                    conn.Close();
+
+                    return result;
+                }
+            }
         }
     }
 }
