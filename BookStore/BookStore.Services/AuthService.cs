@@ -70,6 +70,34 @@ namespace BookStore.Services
         }
 
 
+        public Role GetRole(int roleId)
+        {
+            var role = new Role();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "select * from [Role] where Id=@roleId";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@roleId", roleId);
+                    var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+
+                        role.Name = reader["Name"].ToString();
+
+
+                    }
+                    conn.Close();
+                    return role;
+                }
+            }
+        }
+
+
         public int AddUser(AuthenticatedUser user)
         {
             using (SqlConnection conn = new SqlConnection(ConnectionString))
@@ -94,6 +122,48 @@ namespace BookStore.Services
                     return result;
                 }
             }
+        }
+
+        public AuthenticatedUser CheckUser(string userName, string password)
+        {
+            AuthenticatedUser authenticatedUser = new AuthenticatedUser();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                string sql = "select * from [User] where UserName=@userName and Password=@password";
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@userName", userName);
+                    cmd.Parameters.AddWithValue("@password", password);
+
+                    var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        authenticatedUser.Id = Convert.ToInt32(reader["Id"]);
+                        authenticatedUser.UserName = reader["UserName"].ToString();
+                        authenticatedUser.RoleId = Convert.ToInt32(reader["RoleId"]);
+
+
+                    }
+                    conn.Close();
+
+                    return authenticatedUser;
+                }
+            }
+        }
+
+        public bool CheckUserExists(string userName, string password)
+        {
+            bool flag = false;
+            var user = CheckUser(userName, password);
+            if (user != null)
+            {
+                flag = true;
+                return flag;
+            }
+
+            return flag;
         }
     }
 }

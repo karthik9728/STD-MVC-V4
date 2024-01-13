@@ -13,6 +13,12 @@ namespace BookStore.Services
 
         List<Role> GetAllRoles();
 
+        Role GetRole(int roleId);
+
         int AddUser(AuthenticatedUser user);
+
+        AuthenticatedUser CheckUser(string userName,string password);
+
+        bool CheckUserExists(string userName,string password);
     }
 }

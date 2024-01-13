@@ -2,7 +2,15 @@
 
 @if (httpContextAccessor.HttpContext.Session.GetString("userName") != null)
 {
-    <a asp-controller="Account" asp-action="Logout">Logout</a>
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            Welcome @httpContextAccessor.HttpContext.Session.GetString("userName")
+        </li>
+        <li class="nav-item">
+            <a asp-controller="Account" asp-action="Logout">Logout</a>
+        </li>
+    </ul>
+
 }
 else
 {

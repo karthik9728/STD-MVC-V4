@@ -1,5 +1,7 @@
 ﻿using BookStore.Entites;
 using BookStore.Services;
+using BookStore.Web.Filter;
+using BookStore.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Web.Controllers
@@ -19,6 +21,29 @@ namespace BookStore.Web.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Login(LoginViewModel model)
+        {
+            if (_authService.CheckUserExists(model.UserName, model.Password))
+            {
+
+                var user = _authService.CheckUser(model.UserName, model.Password);
+
+                if(user != null)
+                {
+                    var role = _authService.GetRole(user.RoleId);
+
+                    HttpContext.Session.SetString("userName",user.UserName);
+                    HttpContext.Session.SetString("role",role.Name);
+
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+
+            return View();
+        }
+
 
         [HttpGet]
         public IActionResult Register()
@@ -33,7 +58,7 @@ namespace BookStore.Web.Controllers
             authenticatedUser.UserName = authenticatedUser.Email;
             var result = _authService.AddUser(authenticatedUser);
 
-            if(result == 1)
+            if(result > 0)
             {
                 return RedirectToAction(nameof(Login));
             }

@@ -1,4 +1,5 @@
 ﻿using BookStore.Services;
+using BookStore.Web.Filter;
 using BookStore.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -16,6 +17,7 @@ namespace BookStore.Web.Controllers
             _bookService = bookService;
         }
 
+        [CheckSession("userName")]
         public IActionResult Index()
         {
             var book = _bookService.GetBookById(1);
