@@ -36,6 +36,8 @@ namespace BookStore.Services
 
         //public List<Cart> GetListOfCart(string query);
 
+        public int SaveBookInCart(Cart cart);
+
         //Order
         public List<OrderDetail> GetListOrders();
 

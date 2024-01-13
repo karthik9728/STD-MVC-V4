@@ -35,6 +35,7 @@ namespace BookStore.Web.Controllers
 
                     HttpContext.Session.SetString("userName",user.UserName);
                     HttpContext.Session.SetString("role",role.Name);
+                    HttpContext.Session.SetString("userId",user.Id.ToString());
 
                     return RedirectToAction("Index", "Home");
                 }

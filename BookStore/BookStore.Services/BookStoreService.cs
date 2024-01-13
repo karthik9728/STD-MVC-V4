@@ -363,6 +363,32 @@ namespace BookStore.Services
         //    throw new NotImplementedException();
         //}
 
+        public int SaveBookInCart(Cart cart)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "Insert into [Cart](BookId,Name,Price,Quantity,TotalAmount,UserId)" +
+                    "values(@bookId,@bookName,@price,@Quantity,@totalAmount,@userId)";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.CommandType = System.Data.CommandType.Text;
+                    cmd.Parameters.AddWithValue("@bookId", cart.BookId);
+                    cmd.Parameters.AddWithValue("@bookName", cart.BookName);
+                    cmd.Parameters.AddWithValue("@price", cart.Price);
+                    cmd.Parameters.AddWithValue("@Quantity", cart.Quantity);
+                    cmd.Parameters.AddWithValue("@totalAmount", cart.TotalAmount);
+                    cmd.Parameters.AddWithValue("@userId", cart.UserId);
+
+                    int result = cmd.ExecuteNonQuery();
+                    conn.Close();
+                    return result;
+                }
+            }
+        }
+
 
         public List<OrderDetail> GetListOrders()
         {

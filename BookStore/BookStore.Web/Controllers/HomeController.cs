@@ -1,4 +1,5 @@
-﻿using BookStore.Services;
+﻿using BookStore.Entites;
+using BookStore.Services;
 using BookStore.Web.Filter;
 using BookStore.Web.Models;
 using BookStore.Web.ViewModels;
@@ -40,6 +41,7 @@ namespace BookStore.Web.Controllers
             return View(vm);
         }
 
+        [HttpGet]
         public IActionResult Details(int id)
         {
             BookWithCategory vm = new BookWithCategory();
@@ -70,6 +72,29 @@ namespace BookStore.Web.Controllers
 
             return View(vm);
         }
+
+        [CheckSession("userName")]
+        [HttpPost]
+        public IActionResult Details(BookWithCategory vm)
+        {
+            Cart cart = new Cart();
+            cart.BookId = vm.BookId;
+            cart.BookName = vm.Name;
+            cart.Price = vm.Price;
+            cart.Quantity = vm.Quantity;
+            var total = (cart.Quantity) * (cart.Price);
+            cart.TotalAmount = total;
+            cart.UserId = Convert.ToInt32(HttpContext.Session.GetString("userId"));
+            int result = _bookService.SaveBookInCart(cart);
+            if (result > 0)
+            {
+                HttpContext.Session.SetInt32("sessionCart", _bookService.GetCartDetailsByUserId(cart.UserId).Count());
+                return RedirectToAction("Index", "Carts");
+            }
+            return RedirectToAction("Index", "Home");
+
+        }
+
 
         public IActionResult Privacy()
         {
