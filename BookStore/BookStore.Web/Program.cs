@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IBookStoreService, BookStoreService>();
-
+builder.Services.AddHttpContextAccessor();
 //Session
 builder.Services.AddSession(options =>
 {
