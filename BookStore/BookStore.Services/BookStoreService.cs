@@ -294,9 +294,9 @@ namespace BookStore.Services
             {
                 conn.Open();
 
-                string sql = "select DISTINCT c.Id,c.Name from [Book] b inner join" 
-                            + "[BookCategory] bc on b.Id=bc.BookId inner join Category c"
-                            + $"on bc.CategoryId = c.Id where b.Id = @bookId";
+                string sql = "select DISTINCT c.Id,c.Name from Book b inner join " +
+                    "BookCategory bc on b.Id = bc.BookId inner join Category c " +
+                    $"on bc.CategoryId = c.Id Where b.Id = @bookId";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
 

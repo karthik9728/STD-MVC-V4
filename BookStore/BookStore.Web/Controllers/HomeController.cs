@@ -1,6 +1,7 @@
 ﻿using BookStore.Services;
 using BookStore.Web.Filter;
 using BookStore.Web.Models;
+using BookStore.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -17,13 +18,57 @@ namespace BookStore.Web.Controllers
             _bookService = bookService;
         }
 
-        [CheckSession("userName")]
+        //[CheckSession("userName")]
         public IActionResult Index()
         {
-            var book = _bookService.GetBookById(1);
+     
             var books = _bookService.GetListOfBooks();
 
-            return View(books);
+            List<BookViewModel> vm = new List<BookViewModel>();   
+
+            foreach (var book in books)
+            {
+                vm.Add(new BookViewModel
+                {
+                    BookId = book.Id, 
+                    PictureUri = book.BookImage,
+                    Price = book.Price,
+                    Name = book.Name,
+                });
+            }
+
+            return View(vm);
+        }
+
+        public IActionResult Details(int id)
+        {
+            BookWithCategory vm = new BookWithCategory();
+
+            var bookDetails = _bookService.GetBookById(id);
+
+            if(bookDetails.BookAuthorId != 0)
+            {
+                var bookAuthor = _bookService.GetBookAuthorById(bookDetails.BookAuthorId);
+
+                vm.Author = bookAuthor;
+            }
+
+            if(bookDetails.BookStoreId != 0)
+            {
+                var bookStore = _bookService.GetStoryById(bookDetails.BookStoreId);
+
+                vm.BookStore = bookStore;
+            }
+
+            vm.Categories = _bookService.GetCategoriesByBookId(id);
+            vm.BookId = bookDetails.Id;
+            vm.Name = bookDetails.Name;
+            vm.ISBNNumber = bookDetails.ISBNNumber;
+            vm.Price = bookDetails.Price;
+            vm.PictureUri = bookDetails.BookImage;
+            vm.Description = bookDetails.Description;
+
+            return View(vm);
         }
 
         public IActionResult Privacy()
