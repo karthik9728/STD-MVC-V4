@@ -22,5 +22,7 @@ namespace BookStore.Services
         bool CheckUserExists(string userName,string password);
 
         public AuthenticatedUser GetUserByUserId(int userId);
+
+        public int UpdateUserDetails(int id, string address, string contactNumber);
     }
 }

@@ -195,5 +195,30 @@ namespace BookStore.Services
             }
 
         }
+
+        public int UpdateUserDetails(int id, string address, string contactNumber)
+        {
+            using(SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "UPDATE [User] SET Address=@address,ContactNumber=@contactNumber WHERE Id=@id";
+
+                using(SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.CommandType = System.Data.CommandType.Text;
+
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@address", address);
+                    cmd.Parameters.AddWithValue("@contactNumber", contactNumber);
+
+                    int result = cmd.ExecuteNonQuery();
+
+                    conn.Close();
+
+                    return result;
+                }
+            }
+        }
     }
 }

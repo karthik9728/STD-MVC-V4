@@ -78,5 +78,28 @@ namespace BookStore.Web.Controllers
             return View(vm);
 
         }
+
+        [CheckSession("userId")]
+        public IActionResult ChangeAddress()
+        {
+            UserViewModel vm = new UserViewModel();
+            var userDetail = _authService.GetUserByUserId((int)HttpContext.Session.GetInt32("userId"));
+            vm.Id = userDetail.Id;
+            vm.Address = userDetail.Address;
+            vm.ContactNumber = userDetail.ContactNumber;
+            return View(vm);
+        }
+
+        [HttpPost]
+        public IActionResult ChangeAddress(UserViewModel vm)
+        {
+            int result = _authService.UpdateUserDetails(vm.Id, vm.Address, vm.ContactNumber);
+            if (result > 0)
+            {
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+
+        }
     }
 }
