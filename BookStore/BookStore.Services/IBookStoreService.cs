@@ -44,8 +44,12 @@ namespace BookStore.Services
 
         public int DeleteCartById(int id);
 
+        public void DeleteAllCartItemsByUserId(int userId);
 
         //Order
+        public bool AddCartToOrder(List<Cart> userCart);
+
+
         public List<OrderDetail> GetListOrders();
 
         public OrderDetail GetOrderDetails(string query);

@@ -101,5 +101,22 @@ namespace BookStore.Web.Controllers
             return RedirectToAction("Index");
 
         }
+
+        [CheckSession("userId")]
+        public IActionResult AddToOrder()
+        {
+            OrderDetail orderDetail = new OrderDetail();
+            var userCart = _bookService.GetCartDetailsByUserId((int)HttpContext.Session.GetInt32("userId"));
+            var result = _bookService.AddCartToOrder(userCart);
+            if (result == true)
+            {
+                int userId = (int)HttpContext.Session.GetInt32("userId");
+                TempData["success"] = "Thanks For Your Order";
+                _bookService.DeleteAllCartItemsByUserId(userId);
+                HttpContext.Session.SetInt32("sessionCart", _bookService.GetCartDetailsByUserId(userId).Count());
+                return View("success");
+            }
+            return View(orderDetail);
+        }
     }
 }

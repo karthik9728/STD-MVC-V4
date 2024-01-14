@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -511,6 +512,81 @@ namespace BookStore.Services
             }
         }
 
+        public void DeleteAllCartItemsByUserId(int userId)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "Delete from [Cart] where UserId=@id";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.CommandType = System.Data.CommandType.Text;
+
+                    cmd.Parameters.AddWithValue("@id", userId);
+                    int result = cmd.ExecuteNonQuery();
+                    conn.Close();
+
+                }
+            }
+        }
+
+        public bool AddCartToOrder(List<Cart> userCart)
+        {
+
+            try
+            {
+                using(SqlConnection conn = new SqlConnection(ConnectionString))
+                {
+                    conn.Open();
+
+                    DataTable sourceTable = ConvertListToDataTable(userCart);
+
+                    using(SqlBulkCopy bulkCopy = new SqlBulkCopy(conn))
+                    {
+                        bulkCopy.DestinationTableName = "[dbo].[Order]";
+
+                        bulkCopy.ColumnMappings.Add("BookId", "BookId");
+                        bulkCopy.ColumnMappings.Add("Name", "Name");
+                        bulkCopy.ColumnMappings.Add("Price", "Price");
+                        bulkCopy.ColumnMappings.Add("Quantity", "Quantity");
+                        bulkCopy.ColumnMappings.Add("TotalAmount", "TotalAmount");
+                        bulkCopy.ColumnMappings.Add("UserId", "UserId");
+                        bulkCopy.ColumnMappings.Add("OrderDate", "OrderDate");
+
+                        bulkCopy.WriteToServer(sourceTable);
+
+                    }
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+        }
+
+        public DataTable ConvertListToDataTable(List<Cart> userCarts)
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("BookId", typeof(int));
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Price", typeof(decimal));
+            table.Columns.Add("Quantity", typeof(int));
+            table.Columns.Add("TotalAmount", typeof(decimal));
+            table.Columns.Add("UserId", typeof(int));
+            table.Columns.Add("OrderDate", typeof(DateTime));
+
+            foreach (var item in userCarts)
+            {
+                table.Rows.Add(item.BookId, item.BookName, item.Price, item.Quantity, item.TotalAmount, item.UserId, DateTime.Now);
+            }
+
+            return table;
+        }
 
         public OrderDetail GetOrderDetails(string query)
         {
