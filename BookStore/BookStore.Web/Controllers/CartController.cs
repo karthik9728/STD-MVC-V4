@@ -1,6 +1,7 @@
 ﻿using BookStore.Entites;
 using BookStore.Services;
 using BookStore.Web.Filter;
+using BookStore.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Web.Controllers
@@ -64,6 +65,17 @@ namespace BookStore.Web.Controllers
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
+
+        }
+
+        [CheckSession("userId")]
+        public IActionResult AddressDetail(Decimal GrandTotal)
+        {
+            BillingDetailViewModel vm = new BillingDetailViewModel();
+            var userDetail = _authService.GetUserByUserId((int)HttpContext.Session.GetInt32("userId"));
+            vm.Address = userDetail.Address;
+            vm.GrandTotal = GrandTotal;
+            return View(vm);
 
         }
     }

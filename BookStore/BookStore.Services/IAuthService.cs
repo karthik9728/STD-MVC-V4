@@ -20,5 +20,7 @@ namespace BookStore.Services
         AuthenticatedUser CheckUser(string userName,string password);
 
         bool CheckUserExists(string userName,string password);
+
+        public AuthenticatedUser GetUserByUserId(int userId);
     }
 }

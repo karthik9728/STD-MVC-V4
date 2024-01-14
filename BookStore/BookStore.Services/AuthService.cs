@@ -165,5 +165,35 @@ namespace BookStore.Services
 
             return flag;
         }
+
+        public AuthenticatedUser GetUserByUserId(int userId)
+        {
+            var authenticatedUser = new AuthenticatedUser();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                string sql = "select * from [User] where Id=@userId";
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@userId", userId);
+
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        authenticatedUser.Id = Convert.ToInt32(reader["Id"]);
+                        authenticatedUser.Name = reader["Name"].ToString();
+                        authenticatedUser.Address = reader["Address"].ToString();
+                        authenticatedUser.ContactNumber = reader["ContactNumber"].ToString();
+                    }
+
+                    conn.Close();
+
+                    return authenticatedUser;
+                }
+            }
+
+        }
     }
 }

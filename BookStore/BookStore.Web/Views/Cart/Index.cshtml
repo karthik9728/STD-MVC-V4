@@ -60,7 +60,7 @@
     var GrandTotal = @Model.Sum(x => x.TotalAmount);
 }
 <div>
-    <form asp-action="AddressDetail" asp-controller="Carts">
+    <form asp-action="AddressDetail" asp-controller="Cart">
         <input type="hidden" asp-for="@GrandTotal" />
         <input type="Submit" value="Proced To payment" class="btn btn-primary" />
     </form>

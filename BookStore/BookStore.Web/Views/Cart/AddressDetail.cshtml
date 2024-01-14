@@ -1,0 +1,49 @@
+﻿@using BookStore.Web.ViewModels
+@model BillingDetailViewModel
+
+<a asp-action="ChangeAddress" asp-controller="Carts">Change Address Details</a>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddToOrder">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <textarea readonly asp-for="Address" class="form-control"></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GrandTotal" class="control-label"></label>
+                <input readonly asp-for="GrandTotal" class="form-control" />
+                <span asp-validation-for="GrandTotal" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CardName" class="control-label"></label>
+                <input asp-for="CardName" class="form-control" />
+                <span asp-validation-for="CardName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CardNumber" class="control-label"></label>
+                <input asp-for="CardNumber" class="form-control" />
+                <span asp-validation-for="CardNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExpireNumber" class="control-label"></label>
+                <input asp-for="ExpireNumber" class="form-control" />
+                <span asp-validation-for="ExpireNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CVV" class="control-label"></label>
+                <input asp-for="CVV" class="form-control" />
+                <span asp-validation-for="CVV" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="Submit" value="Place Order" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
