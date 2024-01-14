@@ -38,6 +38,10 @@ namespace BookStore.Services
 
         public int SaveBookInCart(Cart cart);
 
+        public Cart GetCartById(int cartId);
+
+        public int UpdateCart(int cartId, decimal totalAmount, int quantity);
+
         //Order
         public List<OrderDetail> GetListOrders();
 

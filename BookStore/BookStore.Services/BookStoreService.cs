@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -265,7 +266,7 @@ namespace BookStore.Services
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
-                cmd.Parameters.AddWithValue("@id",categoryId);
+                cmd.Parameters.AddWithValue("@id", categoryId);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -425,6 +426,67 @@ namespace BookStore.Services
 
             return orderDetails;
         }
+
+
+        public Cart GetCartById(int cartId)
+        {
+            Cart cart = new Cart();
+
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "select * from [Cart] where Id=@id";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+
+                cmd.Parameters.AddWithValue("@id", cartId);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        cart.Id = Convert.ToInt32(reader["Id"]);
+                        cart.BookId = Convert.ToInt32(reader["BookId"]);
+                        cart.BookName = reader["Name"].ToString();
+                        cart.Price = Convert.ToDecimal(reader["Price"]);
+                        cart.Quantity = Convert.ToInt32(reader["Quantity"]);
+                        cart.TotalAmount = Convert.ToDecimal(reader["TotalAmount"]);
+                        cart.UserId = Convert.ToInt32(reader["UserId"]);
+
+                    }
+
+                    conn.Close();
+                }
+            }
+
+            return cart;
+        }
+
+        public int UpdateCart(int cartId, decimal totalAmount, int quantity)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+
+                string sql = "Update [Cart] Set Quantity=@quantity,TotalAmount=@totalAmount where Id=@id";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.CommandType = System.Data.CommandType.Text;
+                    cmd.Parameters.AddWithValue("@quantity", quantity);
+                    cmd.Parameters.AddWithValue("@totalAmount", totalAmount);
+                    cmd.Parameters.AddWithValue("@id", cartId);
+
+
+                    int result = cmd.ExecuteNonQuery();
+                    conn.Close();
+                    return result;
+                }
+            }
+        }
+
 
         public OrderDetail GetOrderDetails(string query)
         {
