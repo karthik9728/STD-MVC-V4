@@ -89,7 +89,7 @@ namespace BookStore.Web.Controllers
             if (result > 0)
             {
                 HttpContext.Session.SetInt32("sessionCart", _bookService.GetCartDetailsByUserId(cart.UserId).Count());
-                return RedirectToAction("Index", "Carts");
+                return RedirectToAction("Index", "Cart");
             }
             return RedirectToAction("Index", "Home");
 
