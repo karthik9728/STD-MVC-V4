@@ -588,6 +588,85 @@ namespace BookStore.Services
             return table;
         }
 
+
+        public List<OrderDetail> GetAllOrders()
+        {
+            List<OrderDetail> orders = new List<OrderDetail>();
+
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                string sql = "select * from [Order] ORDER BY OrderDate desc";
+                SqlCommand command = new SqlCommand(sql, connection);
+
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        orders.Add(new OrderDetail
+                        {
+                            Id = Convert.ToInt32(dataReader["Id"]),
+                            BookId = Convert.ToInt32(dataReader["BookId"]),
+                            BookName = dataReader["Name"].ToString(),
+                            Price = Convert.ToDecimal(dataReader["Price"]),
+                            Quantity = Convert.ToInt32(dataReader["Quantity"]),
+                            TotalAmount = Convert.ToDecimal(dataReader["TotalAmount"]),
+                            UserId = Convert.ToInt32(dataReader["UserId"]),
+                            OrderDate = Convert.ToDateTime(dataReader["OrderDate"])
+
+
+
+
+                        });
+                    }
+                }
+                connection.Close();
+            }
+            return orders;
+        }
+
+
+        public List<OrderDetail> GetAllOrders(int? userId)
+        {
+            List<OrderDetail> orders = new List<OrderDetail>();
+
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+
+                string sql = "select * from [Order] where UserId=@userId";
+
+                SqlCommand command = new SqlCommand(sql, connection);
+
+                command.Parameters.AddWithValue("@userId", userId);
+
+                using (SqlDataReader dataReader = command.ExecuteReader())
+                {
+                    while (dataReader.Read())
+                    {
+                        orders.Add(new OrderDetail
+                        {
+                            Id = Convert.ToInt32(dataReader["Id"]),
+                            BookId = Convert.ToInt32(dataReader["BookId"]),
+                            BookName = dataReader["Name"].ToString(),
+                            Price = Convert.ToDecimal(dataReader["Price"]),
+                            Quantity = Convert.ToInt32(dataReader["Quantity"]),
+                            TotalAmount = Convert.ToDecimal(dataReader["TotalAmount"]),
+                            UserId = Convert.ToInt32(dataReader["UserId"]),
+                            OrderDate = Convert.ToDateTime(dataReader["OrderDate"])
+
+
+
+
+                        });
+                    }
+                }
+                connection.Close();
+            }
+            return orders;
+        }
+
         public OrderDetail GetOrderDetails(string query)
         {
             throw new NotImplementedException();

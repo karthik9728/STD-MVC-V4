@@ -49,6 +49,9 @@ namespace BookStore.Services
         //Order
         public bool AddCartToOrder(List<Cart> userCart);
 
+        public List<OrderDetail> GetAllOrders();
+
+        public List<OrderDetail> GetAllOrders(int? userId);
 
         public List<OrderDetail> GetListOrders();
 
