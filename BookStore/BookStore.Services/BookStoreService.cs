@@ -488,6 +488,30 @@ namespace BookStore.Services
         }
 
 
+        public int DeleteCartById(int id)
+        {
+            using(SqlConnection conn = new SqlConnection(ConnectionString)) 
+            {
+                conn.Open();
+
+                string sql = "DELETE FROM [Cart] WHERE Id=@id";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.CommandType = System.Data.CommandType.Text;
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    int result = cmd.ExecuteNonQuery();
+
+                    conn.Close();
+
+                    return result;
+                }
+            }
+        }
+
+
         public OrderDetail GetOrderDetails(string query)
         {
             throw new NotImplementedException();

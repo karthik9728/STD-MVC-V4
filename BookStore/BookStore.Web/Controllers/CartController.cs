@@ -45,5 +45,26 @@ namespace BookStore.Web.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        [CheckSession("userId")]
+        public IActionResult Delete(int id)
+        {
+            var cart = _bookService.GetCartById(id);
+            return View(cart);
+
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Cart cart)
+        {
+            int result = _bookService.DeleteCartById(cart.Id);
+            if (result > 0)
+            {
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+
+        }
     }
 }

@@ -42,6 +42,9 @@ namespace BookStore.Services
 
         public int UpdateCart(int cartId, decimal totalAmount, int quantity);
 
+        public int DeleteCartById(int id);
+
+
         //Order
         public List<OrderDetail> GetListOrders();
 
